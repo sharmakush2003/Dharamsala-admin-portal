@@ -139,6 +139,11 @@
                         </div>
                     </div>
 
+                    <div id="warningBadge" class="warning-badge" style="display: none;" onclick="showWarningDetails()">
+                        <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+                        <span><span id="warningCount">0</span> Warnings</span>
+                    </div>
+
                     <button onclick="openSystemInfoModal()"
                         style="background: none; border: none; padding: 8px; cursor: pointer; color: #94a3b8;" title="System Info"><i
                             data-lucide="info"></i></button>
@@ -836,6 +841,27 @@
             </div>
             
             <button onclick="document.getElementById('systemInfoModal').style.display='none'" style="width: 100%; padding: 14px; border-radius: 12px; background: #0f172a; color: white; border: none; font-weight: 800; font-size: 0.9rem; cursor: pointer;">Close Window</button>
+        </div>
+    </div>
+
+    <!-- WARNINGS MODAL -->
+    <div id="warningsModal" class="overlay">
+        <div class="modal-pane" style="max-width: 500px;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="width: 40px; height: 40px; background: #fee2e2; color: #ef4444; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="alert-triangle"></i>
+                </div>
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Data Warnings</h2>
+                    <p style="font-size: 0.85rem; color: #64748b;">Issues found in Spreadsheet rows</p>
+                </div>
+            </div>
+            
+            <div id="warningsList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+                <!-- Warnings will be injected here -->
+            </div>
+            
+            <button onclick="document.getElementById('warningsModal').style.display='none'" style="width: 100%; padding: 14px; border-radius: 12px; background: #0f172a; color: white; border: none; font-weight: 800; font-size: 0.9rem; cursor: pointer;">Got it, I'll check the sheet</button>
         </div>
     </div>
 

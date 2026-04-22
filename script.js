@@ -124,14 +124,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const API_URL = "https://script.google.com/macros/s/AKfycbz6dfl7Yk7s7tJ8Xg0VXdaZbZmVU2z0_T5kM7EvFHxvXPsEuIklA4IcC27PnnyuypC5Dw/exec";
-
+let rawSheetData = [];
 let bookingData = [];
 let historyData = [];
 let filteredData = [];
+let errorRows = []; // Global storage for spreadsheet errors
 let filteredBillingData = [];
 let pendingPrintTask = null;
 let stats = {};
-let rawSheetData = []; // Cache for full spreadsheet data
 let sessionApiCalls = 0;
 let currentAllotTimestamp = '';
 let currentAllotEmail = '';  // Secondary identifier for GAS row lookup
@@ -372,10 +372,13 @@ async function loadData() {
         const apiCounter = document.getElementById('sessionApiCounter');
         if (apiCounter) apiCounter.innerText = sessionApiCalls;
 
-        rawSheetData = data; // Cache the complete raw data
+        // Process and map original row numbers
+        const fullData = data.map((r, idx) => ({ ...r, _sheetRow: idx + 2 }));
 
+        rawSheetData = fullData; 
+        
         // Separate Active vs Historical based on new 'Booking Status' column
-        bookingData = data.filter(r => {
+        bookingData = fullData.filter(r => {
             const hasGuest = r["Guest Name"] || r["Head of Family Name"] || r["Mobile Number"] || r["Contact Number"];
             const status = String(r["Booking Status"] || "").toLowerCase();
             
@@ -441,8 +444,8 @@ async function loadData() {
         }
 
     } catch (err) {
-        console.error("Data Load Error:", err);
-        showToast("Link Failure. Check Google API.", "error");
+        console.error("CRITICAL: Error in loadData:", err);
+        showToast("System Error: " + err.message, "error");
     } finally {
         if (icon) icon.classList.remove('spinning');
         if (statusLabel) {
@@ -494,11 +497,22 @@ function renderTable(data) {
     }
 
     tableBody.innerHTML = "";
+    errorRows = []; // Clear previous errors
+
     data.forEach((r, index) => {
-        const roomNum = r["Room Number"] || "Pending";
-        const status = getApplicationStatus(r);
-        const guestName = r["Guest Name"] || r["Head of Family Name"] || "";
-        const phone = (r["Contact Number"] || r["Mobile Number"] || "").toString().trim();
+        const sheetRow = r._sheetRow || "Unknown";
+        try {
+            const roomNum = r["Room Number"] || "Pending";
+            const status = getApplicationStatus(r);
+            
+            // Validation: Ensure names are strings before processing
+            const rawGuestName = r["Guest Name"] || r["Head of Family Name"] || "";
+            if (typeof rawGuestName !== 'string' && typeof rawGuestName !== 'undefined' && rawGuestName !== null) {
+                throw new Error(`Column 'Guest Name' has a numeric value (${rawGuestName}). Please change it to text in the spreadsheet.`);
+            }
+
+            const guestName = rawGuestName.toString();
+            const phone = (r["Contact Number"] || r["Mobile Number"] || "").toString().trim();
         const displayName = guestName || (status === "Under Cleaning" ? "ROOM CLEANING" : "N/A");
         const displayPhone = phone || "-";
         const statusClass = status === "Booked" ? "tag-booked" : (status === "Under Cleaning" ? "tag-cleaning" : "tag-pending");
@@ -548,11 +562,56 @@ function renderTable(data) {
         `;
 
         tableBody.appendChild(row);
+        } catch (e) {
+            const rowId = r._sheetRow || (index + 1);
+            console.error(`Error processing spreadsheet row ${rowId}:`, e);
+            errorRows.push({ index: rowId, timestamp: r["Timestamp"], error: e.message });
+        }
     });
+
+    // --- Update Warning Badge ---
+    const badge = document.getElementById("warningBadge");
+    const countEl = document.getElementById("warningCount");
+    if (badge && countEl) {
+        if (errorRows.length > 0) {
+            badge.style.display = "flex";
+            countEl.innerText = errorRows.length;
+        } else {
+            badge.style.display = "none";
+        }
+    }
+
+    if (errorRows.length > 0 && !window._warningShownThisSession) {
+        const firstErr = errorRows[0];
+        showToast(`Data Error at Sheet Row ${firstErr.index} (${firstErr.timestamp}): ${firstErr.error}`, "error");
+        window._warningShownThisSession = true;
+    }
     lucide.createIcons();
 }
 
+function showWarningDetails() {
+    const modal = document.getElementById("warningsModal");
+    const list = document.getElementById("warningsList");
+    if (!modal || !list) return;
 
+    list.innerHTML = "";
+    errorRows.forEach(err => {
+        const item = document.createElement("div");
+        item.style.padding = "12px";
+        item.style.background = "#fff1f2";
+        item.style.border = "1px solid #fecaca";
+        item.style.borderRadius = "8px";
+        item.innerHTML = `
+            <div style="font-weight: 800; color: #991b1b; font-size: 0.85rem;">ROW ${err.index}</div>
+            <div style="font-size: 0.8rem; color: #b91c1c; margin-top: 4px;">${err.error}</div>
+            <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px;">Timestamp: ${err.timestamp || 'N/A'}</div>
+        `;
+        list.appendChild(item);
+    });
+
+    modal.style.display = "flex";
+    lucide.createIcons();
+}
 
 // --- CUSTOM MANUAL BILLING LOGIC ---
 let activeCustomBillType = 'CHECK-IN';
