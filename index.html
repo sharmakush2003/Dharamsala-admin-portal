@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHAM Admin | Jain Dharamshala System</title>
+    <link rel="stylesheet" href="style.css?v=admin_v5">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+
+    <!-- INITIAL LOADING STATE -->
+    <div id="loadingOverlay"
+        style="position: fixed; inset: 0; background: #111827; z-index: 6000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white;">
+        <div
+            style="width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #f9fafb; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px;">
+        </div>
+        <p style="font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8;">
+            Authenticating Admin...</p>
+    </div>
+
+    <!-- AUTHENTICATION OVERLAY -->
+    <div id="loginOverlay" class="auth-overlay" style="display: none;">
+
+        <div class="auth-card">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div
+                    style="width: 50px; height: 50px; background: #ea580c; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                    <i data-lucide="shield-check" style="color: white; width: 28px; height: 28px;"></i>
+                </div>
+                <h2 style="font-weight: 800; margin-bottom: 5px;">Jain Dharamshala Admin</h2>
+                <p style="color: #64748b; font-size: 0.85rem;">Secure Access Portal</p>
+            </div>
+            <form id="loginForm">
+                <div style="margin-bottom: 15px;">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: #64748b;">EMAIL
+                        ADDRESS</label>
+                    <input type="email" id="loginEmail" placeholder="admin@dharamshala.com" required style="width:100%">
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: #64748b;">PASSWORD
+                        KEY</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required style="width:100%">
+                </div>
+                <button type="submit" id="loginBtn"
+                    style="width: 100%; background: #0f172a; color: white; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer;">
+                    Unlock Dashboard
+                </button>
+                <div id="errorMsg"
+                    style="display: none; color: #dc2626; background: #fef2f2; padding: 10px; border-radius: 8px; margin-top: 15px; font-size: 0.8rem; text-align: center; border: 1px solid #fee2e2;">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN HMS CONTENT -->
+    <div id="protectedContent" style="display: none;">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i data-lucide="shield-check"></i>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="line-height: 1;">DHAM Admin</span>
+                    <span
+                        style="font-size: 0.6rem; color: #94a3af; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">Jain
+                        Dharamshala System</span>
+                </div>
+            </div>
+            <nav style="flex: 1;">
+                <div class="nav-link active" id="navBookings">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Guest Registry</span>
+                </div>
+                <div class="nav-link" id="navRoomMap">
+                    <i data-lucide="grid"></i>
+                    <span>Visual Room Map</span>
+                </div>
+                <!-- Property Reports link removed -->
+                <div class="nav-link" id="navBilling">
+                    <i data-lucide="receipt"></i>
+                    <span>Billing & Receipts</span>
+                </div>
+                <div class="nav-link" id="navCustomBill">
+                    <i data-lucide="plus-square"></i>
+                    <span>Custom Bill</span>
+                </div>
+            </nav>
+            <div class="nav-link" onclick="handleLogout()"
+                style="margin-top: auto; color: #fca5a5; margin-bottom: 8px;">
+                <i data-lucide="log-out"></i>
+                <span>Logout Admin</span>
+            </div>
+
+
+
+            <!-- DEVELOPER CREDITS — PREMIUM STYLE -->
+            <div class="developer-credits">
+                <p class="dev-label">
+                    <i data-lucide="zap" class="icon-zap"></i>
+                    A Product Of
+                </p>
+                <p class="dev-names">
+                    Kush Sharma &amp; Lav Sharma
+                </p>
+                <div class="dev-contact">
+                    <a href="tel:+918233816674" title="Call Kush Sharma"><i data-lucide="phone"></i> +91 8233816674</a>
+                    <a href="mailto:kushsharma.cor@gmail.com" title="Email Developer"><i data-lucide="mail"></i>
+                        kushsharma.cor@gmail.com</a>
+                </div>
+                <p class="dev-rights" style="text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.65rem; opacity: 0.8; margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 12px; line-height: 1.6;">
+                    🛡️ Secure Enterprise Environment <br> © 2026 v2.0
+                </p>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="dashboard-header">
+                <div>
+                    <h1 style="font-size: 1.8rem; font-weight: 800;">Admin Registry</h1>
+                    <p style="color: #64748b; font-size: 0.9rem;">Jain Dharamshala System &mdash; Management Dashboard
+                    </p>
+                </div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <!-- LIVE SYSTEM STATUS BADGE — REFINED HUD STYLE -->
+                    <div id="systemStatus" class="status-badge-container" style="margin-right: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25); padding: 7px 16px; border-radius: 100px; backdrop-filter: blur(8px);">
+                            <div class="pulse-dot" style="width: 7px; height: 7px; border-radius: 50%; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);"></div>
+                            <span id="statusText" style="font-size: 0.62rem; font-weight: 800; color: #065f46; text-transform: uppercase; letter-spacing: 1.2px; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="activity" style="width: 12px; height: 12px; opacity: 0.7;"></i>
+                                <span id="statusLabel">System Live</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <button onclick="openSystemInfoModal()"
+                        style="background: none; border: none; padding: 8px; cursor: pointer; color: #94a3b8;" title="System Info"><i
+                            data-lucide="info"></i></button>
+                    <button onclick="loadData(this)"
+                        style="background: none; border: none; padding: 8px; cursor: pointer; color: #64748b;"><i
+                            data-lucide="rotate-ccw"></i></button>
+                </div>
+            </header>
+
+
+
+            <!-- TAB SECTIONS -->
+            <div id="bookingsSection" class="card-layer">
+                <!-- Info Note -->
+                <div
+                    style="padding: 10px 20px; background: #f0fdf4; border-bottom: 1px solid #dcfce7; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="info" style="width: 14px; height: 14px; color: #10b981;"></i>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Registry
+                        shows In-House guests only.</span>
+                </div>
+                <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div class="filter-group">
+                            <button class="filter-btn active" data-filter="pending">New Reg (Pending)</button>
+                            <button class="filter-btn" data-filter="booked">In-House (Booked)</button>
+                        </div>
+                        <div class="search-input-container" style="position: relative;">
+                            <i data-lucide="search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #94a3b8;"></i>
+                            <input type="text" id="registrySearch" placeholder="Search name, room, mobile..." 
+                                style="padding: 8px 12px 8px 36px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.8rem; width: 260px; font-weight: 600; background: white; outline: none; transition: border-color 0.2s;"
+                                onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#e2e8f0'">
+                        </div>
+                    </div>
+                    <div
+                        style="text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+                        <button onclick="printDailyRegistry()" class="btn-export btn-export-green">
+                            <i data-lucide="file-down" size="16"></i> Print Daily Registry
+                        </button>
+                        <div id="activeFilterLabel"
+                            style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                            Showing All Guests</div>
+                    </div>
+                </div>
+                <table class="hms-table">
+                    <thead>
+                        <tr>
+                            <th>Guest Information</th>
+                            <th>Room #</th>
+                            <th>Mobile / Identity</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+
+            <div id="roomMapSection" class="card-layer" style="display: none;">
+                <div style="padding: 25px; border-bottom: 1px solid var(--glass-border);">
+                    <h1 style="font-size: 1.5rem; font-weight: 800;">Property Room Map</h1>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Real-time view of all rooms</p>
+                </div>
+
+                <!-- STATS IN ROOM MAP -->
+                <section class="stats-container" style="padding: 0 25px; margin-top: 20px; margin-bottom: 20px;">
+                    <div class="stat-card" id="statCardTotal">
+                        <div class="icon-box" style="background: #e0e7ff; color: #4338ca;"><i data-lucide="home"></i>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase;">
+                                Total</p>
+                            <h2 id="total">76</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statCardBooked">
+                        <div class="icon-box" style="background: #fee2e2; color: #b91c1c;"><i
+                                data-lucide="user-check"></i></div>
+                        <div>
+                            <p style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase;">
+                                Booked</p>
+                            <h2 id="booked">3</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statCardAvailable">
+                        <div class="icon-box" style="background: #dcfce7; color: #15803d;"><i data-lucide="unlock"></i>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase;">
+                                Available</p>
+                            <h2 id="available">73</h2>
+                        </div>
+                    </div>
+                </section>
+                <!-- ROOM MAP FILTERS -->
+                <div style="padding: 0 25px; margin-bottom: 20px;">
+                    <div class="filter-group" style="display: inline-flex; border: 1px solid var(--glass-border); padding: 4px; background: #f8fafc;">
+                        <button class="filter-btn active" id="rf-all" onclick="filterRoomMap('all')" style="padding: 8px 16px; font-weight: 800;">Show All</button>
+                        <button class="filter-btn" id="rf-available" onclick="filterRoomMap('available')" style="padding: 8px 16px; font-weight: 800;">🟩 Show Only Available</button>
+                        <button class="filter-btn" id="rf-booked" onclick="filterRoomMap('booked')" style="padding: 8px 16px; font-weight: 800;">⬛ Show Only Occupied</button>
+                    </div>
+                </div>
+
+                <!-- ROOM COLOR LEGEND -->
+                <div style="display: flex; align-items: center; gap: 20px; padding: 12px 25px; background: #f8fafc; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); flex-wrap: wrap;">
+                    <span style="font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Legend:</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 28px; height: 28px; border-radius: 6px; background: #f0fdf4; border: 1px solid #bbf7d0;"></div>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #15803d;">Available</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 28px; height: 28px; border-radius: 6px; background: #111827; border: 1px solid #374151;"></div>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #374151;">Occupied</span>
+                    </div>
+                </div>
+
+                <div id="roomGrid" class="room-grid"></div>
+            </div>
+
+
+
+            <div id="customBillSection" class="card-layer" style="display: none;">
+                <div
+                    style="padding: 25px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 style="font-size: 1.5rem; font-weight: 800;">Manual Custom Billing</h1>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Generate receipts manually (Not saved to
+                            spreadsheet)</p>
+                    </div>
+                    <div class="filter-group">
+                        <button onclick="switchCustomBillType('CHECK-IN')" id="btnCustomIn"
+                            class="filter-btn active">Deposit Receipt</button>
+                        <button onclick="switchCustomBillType('CHECK-OUT')" id="btnCustomOut"
+                            class="filter-btn">Check-Out Bill</button>
+                    </div>
+                </div>
+
+                <div style="padding: 30px;">
+                    <form id="customBillForm" onsubmit="handleCustomBillSubmit(event)">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Guest
+                                    Full Name</label>
+                                <input type="text" id="custName" placeholder="Enter guest name" required
+                                    style="width: 100%;">
+                            </div>
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Mobile
+                                    Number</label>
+                                <input type="text" id="custPhone" placeholder="Enter mobile number"
+                                    style="width: 100%;">
+                            </div>
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Room
+                                    Number</label>
+                                <input type="text" id="custRoom" placeholder="e.g. 101" required style="width: 100%;">
+                            </div>
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Identity
+                                    ID (Aadhar/Voter/Ref)</label>
+                                <input type="text" id="custId" placeholder="Identity number" style="width: 100%;">
+                            </div>
+                            <div class="input-group" style="grid-column: 1 / -1;">
+                                <label id="custBillNoLabel"
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #4f46e5; margin-bottom: 5px; text-transform: uppercase;">Bill
+                                    / Receipt No. (e.g. IN-101 or OUT-101)</label>
+                                <input type="text" id="custBillNo" placeholder="Enter receipt number" required
+                                    style="width: 100%; border-color: #c7d2fe; background: #eef2ff;">
+                            </div>
+                        </div>
+
+                        <div id="checkinFields"
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Room
+                                    Rate (₹)</label>
+                                <input type="number" id="custRate" placeholder="e.g. 800" style="width: 100%;">
+                            </div>
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Expected
+                                    Days</label>
+                                <input type="number" id="custDays" value="1" style="width: 100%;">
+                            </div>
+                            <div class="input-group">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">City
+                                    / Address</label>
+                                <input type="text" id="custAddress" placeholder="Guest home city" style="width: 100%;">
+                            </div>
+                        </div>
+
+                        <!-- CHECK-OUT SPECIFIC FIELDS — mirrors physical receipt layout -->
+                        <div id="checkoutFields" style="display: none; gap: 20px; margin-bottom: 25px;">
+
+                            <!-- Row 1: रजिस्टर सं. | क्रमांक -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+                                <div class="input-group">
+                                    <label
+                                        style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">रजिस्टर
+                                        सं. (Register No.)</label>
+                                    <input type="text" id="custRegNo" placeholder="e.g. 245" style="width: 100%;">
+                                </div>
+                                <div class="input-group">
+                                    <label
+                                        style="display: block; font-size: 0.7rem; font-weight: 800; color: #dc2626; margin-bottom: 5px; text-transform: uppercase;">क्रमांक
+                                        (Serial No.)</label>
+                                    <input type="text" id="custKramank" placeholder="e.g. 13801"
+                                        style="width: 100%; border-color: #fca5a5; background: #fff1f2; color: #dc2626; font-weight: 800; font-size: 1rem;">
+                                </div>
+                            </div>
+
+                            <!-- Row 2: निवासी (City/Address) -->
+                            <div class="input-group" style="margin-bottom: 15px;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">निवासी
+                                    (City / Town)</label>
+                                <input type="text" id="custAddressOut" placeholder="Guest home city"
+                                    style="width: 100%;">
+                            </div>
+
+                            <!-- Row 3: साधारण खाता | अन्य -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+                                <div class="input-group">
+                                    <label
+                                        style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">1.
+                                        साधारण खाता — Room Rent (₹)</label>
+                                    <input type="number" id="custRent" placeholder="e.g. 1600" style="width: 100%;"
+                                        oninput="autoCalcTotal()">
+                                </div>
+                                <div class="input-group">
+                                    <label
+                                        style="display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">2.
+                                        अन्य शुल्क — Other Charges (₹)</label>
+                                    <input type="number" id="custOther" placeholder="0" style="width: 100%;"
+                                        oninput="autoCalcTotal()">
+                                </div>
+                            </div>
+
+                            <!-- Row 4: टोटल -->
+                            <div class="input-group" style="margin-bottom: 5px;">
+                                <label
+                                    style="display: block; font-size: 0.7rem; font-weight: 800; color: #0f172a; margin-bottom: 5px; text-transform: uppercase;">टोटल
+                                    — Grand Total (₹)</label>
+                                <input type="number" id="custFinalTotal" placeholder="Auto-calculated or enter manually"
+                                    style="width: 100%; font-size: 1.1rem; font-weight: 800; border-color: #0f172a;"
+                                    oninput="">
+                            </div>
+                        </div>
+
+                        <div
+                            style="display: flex; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--glass-border);">
+                            <button type="submit" class="btn-export btn-export-green"
+                                style="padding: 14px 28px; font-size: 1rem; width: 100%; justify-content: center;">
+                                <i data-lucide="printer"></i> PRINT CUSTOM RECEIPT
+                            </button>
+                            <button type="reset" class="btn-export"
+                                style="background: white; border: 1px solid #e2e8f0; color: #64748b; padding: 14px 20px;">
+                                Clear Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Property Reports Section Removed -->
+
+            <div id="billingSection" class="card-layer" style="display: none;">
+                <div class="table-controls">
+                    <div style="display: flex; gap: 20px; align-items: center; width: 100%; justify-content: space-between;">
+                        <input type="text" id="billingSearchInput" class="date-input"
+                            style="border: 1px solid #e2e8f0 !important; padding: 6px 12px; border-radius: 8px; width: 330px;"
+                            placeholder="Search bills by name, phone...">
+                        
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 0.65rem; font-weight: 800; color: #4338ca; text-transform: uppercase; background: #eef2ff; padding: 7px 14px; border-radius: 8px; border: 1px solid #c7d2fe; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px;">
+                                <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+                                Recent Ledger | Last 48 Hours
+                            </span>
+
+                            <a href="https://docs.google.com/spreadsheets/d/1MV3rYAH7oyxky3xEIoiWCEtJfZpyZz81j90HnbHenKs/edit?gid=1010589698#gid=1010589698"
+                                target="_blank" class="btn-export"
+                                style="background: white; border: 1px solid #e2e8f0; color: #0f172a; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="external-link" size="14"></i> View Whole Data
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <table class="hms-table">
+                    <thead>
+                        <tr>
+                            <th>Guest Information</th>
+                            <th>Room #</th>
+                            <th>Stay Context</th>
+                            <th>Print Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billingTableBody"></tbody>
+                </table>
+            </div>
+
+
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div id="checkinModal" class="overlay">
+        <div class="modal-pane">
+            <h2 style="margin-bottom: 25px; font-weight: 800;">Register Guest Allotment</h2>
+            <form id="checkinForm">
+                <div
+                    style="margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 10px; border: 1px solid var(--glass-border);">
+                    <div style="margin-bottom: 10px;">
+                        <label
+                            style="display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">GUEST
+                            NAME</label>
+                        <input type="text" id="guestName" readonly
+                            style="width:100%; background: transparent; border: none; padding: 0; font-weight: 700; font-size: 1.1rem;">
+                    </div>
+                    <div style="display: flex; gap: 20px;">
+                        <div style="flex: 1;">
+                            <label
+                                style="display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">PHONE</label>
+                            <input type="text" id="guestPhone" readonly
+                                style="width:100%; background: transparent; border: none; padding: 0; font-weight: 600;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label
+                                style="display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">IDENTITY</label>
+                            <input type="text" id="guestId" readonly
+                                style="width:100%; background: transparent; border: none; padding: 0; font-weight: 600;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div style="grid-column: 1 / -1;">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; color: #64748b; text-transform: uppercase;">ROOM CATEGORY & SELECTION</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                            <select id="categorySelect" style="flex: 1; border: 2px solid #e2e8f0; font-weight: 700;"></select>
+                            <div id="selectionToolbar" style="display:none; align-items: center; gap: 8px;">
+                                <button type="button" onclick="selectAllRooms()" class="btn-export-green" style="padding: 8px 16px; font-size: 0.75rem; font-weight: 800; border-radius: 8px;">ALL AVAILABLE ROOMS</button>
+                                <button type="button" onclick="clearRoomSelection()" class="btn-export-red" style="padding: 8px 16px; font-size: 0.75rem; font-weight: 800; border-radius: 8px;">DESELECT ALL</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Standard Single Select -->
+                        <select id="roomSelect" required style="width:100%; border: 2px solid #e2e8f0; font-weight: 700;"></select>
+                        
+                        <!-- Premium Multi-Select Grid (Hidden by default) -->
+                        <div id="roomGridContainer" style="display:none; margin-top: 10px; max-height: 200px; overflow-y: auto; padding: 12px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px;">
+                            <div id="allotRoomGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px;">
+                                <!-- Room chips will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: #4f46e5;">TOTAL DEPOSIT / AMOUNT (₹)</label>
+                        <input type="number" id="roomRate" placeholder="e.g. 2000" required style="width:100%; border: 2px solid #e2e8f0;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px;">EXPECTED
+                        DAYS OF STAY</label>
+                    <input type="number" id="expectedDays" value="1" min="1" required style="width:100%">
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" onclick="closeCheckinModal()"
+                        style="flex:1; padding:12px; border-radius:8px; border:1px solid #e2e8f0; background:none; cursor:pointer;">Cancel</button>
+                    <button type="submit"
+                        style="flex:1; padding:12px; border-radius:8px; border:none; background:#4f46e5; color:white; font-weight:700; cursor:pointer;">Finalize
+                        & Print</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="detailsModal" class="overlay">
+        <div class="modal-pane">
+            <h2 style="margin-bottom: 25px; font-weight: 800;">Guest Profile</h2>
+            <div id="modalDetails"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;"></div>
+            <button onclick="closeDetailsModal()"
+                style="width: 100%; padding: 14px; border-radius: 10px; background: #0f172a; color: white; border: none; font-weight: 700; cursor: pointer;">Close
+                Profile</button>
+        </div>
+    </div>
+
+    <!-- UNIVERSAL PRINT PREVIEW MODAL -->
+    <div id="printPreviewModal" class="overlay">
+        <div class="modal-pane" style="max-width: 560px; width: 95%; max-height: 92vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div
+                        style="width: 36px; height: 36px; background: #0f172a; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="printer" style="color: white; width: 18px; height: 18px;"></i>
+                    </div>
+                    <div>
+                        <h2 id="ppTitle" style="font-size: 1rem; font-weight: 800; margin: 0;">Verify &amp; Print
+                            Receipt</h2>
+                        <p id="ppSubtitle" style="font-size: 0.72rem; color: #64748b; margin: 0;"></p>
+                    </div>
+                </div>
+                <button onclick="closePrintPreviewModal()"
+                    style="background:none; border:none; cursor:pointer; color:#94a3b8; font-size:1.4rem; line-height:1;">✕</button>
+            </div>
+
+            <div id="ppFormBody" style="display: flex; flex-direction: column; gap: 14px;"></div>
+
+            <div style="display: flex; gap: 10px; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #e2e8f0;">
+                <button onclick="confirmAndPrintReceipt()"
+                    style="flex:1; padding:14px; background:#0f172a; color:white; border:none; border-radius:10px; font-weight:800; font-size:0.95rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i data-lucide="printer" style="width:16px; height:16px;"></i> Print Receipt
+                </button>
+                <button onclick="closePrintPreviewModal()"
+                    style="padding:14px 20px; border:1px solid #e2e8f0; background:white; color:#64748b; border-radius:10px; font-weight:700; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="formModal" class="overlay">
+
+        <div class="modal-pane"
+            style="max-width: 900px; width: 95%; height: 90vh; display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+            <div
+                style="padding: 15px 25px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; background: white; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div
+                        style="width: 32px; height: 32px; background: #6366f1; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="clipboard-list" style="color: white; width: 18px; height: 18px;"></i>
+                    </div>
+                    <h2 id="formModalTitle"
+                        style="font-size: 1rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Complete Required Form</h2>
+                </div>
+                <button id="formModalSubmitBtn" onclick="submitVerificationToSheet()"
+                    style="background: #111827; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 800; cursor: pointer; color: white; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                    <i data-lucide="check-circle" style="width: 18px; height: 18px; color: #10b981;"></i>
+                    <span>CONFIRM & SYNC TO SHEET</span>
+                </button>
+            </div>
+            <div id="verificationFormContainer" style="flex: 1; background: #f8fafc; overflow-y: auto; padding: 25px;">
+                <!-- Custom HTML form will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer"
+        style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    </div>
+
+    <div id="receiptTemplate" class="print-only">
+        <!-- 1. LANDSCAPE: DEPOSIT RECEIPT (Check-in) -->
+        <div id="rasidLandscape" class="rasid-landscape">
+            <div class="rasid-header">
+                <div>&nbsp;<br>&nbsp;</div>
+                <div class="rasid-header-center">卐 चित्रकूट मण्डन श्री आदिनाथाय नम: 卐</div>
+                <div style="text-align: right;">धर्मशाला 01472-241971<br>मो.नं. 9116397180</div>
+            </div>
+            <div class="rasid-title">
+                <h1 class="rasid-trust-name">श्री जैन श्वेताम्बर सातबीस देवरी किला तीर्थ ट्रस्ट, चित्तौड़गढ़</h1>
+                <p class="rasid-donor-name">श्रीमती जैकुंवर बेन अमृतलाल रामजी भाई शाह, माटुंगा-मुम्बई निवासी (कुतीयाना
+                    वाले)</p>
+                <p class="rasid-subtitle">श्री जैन श्वेताम्बर विश्रांति गृह, स्टेशन रोड़, चित्तौड़गढ़ (राज.)</p>
+            </div>
+            <div
+                style="display: flex; justify-content: center; align-items: center; gap: 20px; position: relative; margin-bottom: 20px;">
+                <div class="rasid-heading-box" style="margin: 0;">डिपोजिट रसीद</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #000; position: absolute; right: 0;">
+                    दिनांक: <span class="printDateL"></span>
+                </div>
+            </div>
+            <div class="rasid-body">
+                <div class="rasid-field"><span class="rasid-label">रसीद नं.</span><span
+                        class="rasid-value printReceiptNoL" style="color: red; font-weight: 800;"></span></div>
+                <div class="rasid-field"><span class="rasid-label">कमरा नं.</span><span class="rasid-value printRoomNoL"
+                        style="font-weight: 800;"></span></div>
+                <div class="rasid-field"><span class="rasid-label">श्रीमान्</span><span
+                        class="rasid-value printGuestNameL" style="font-weight: 700;"></span></div>
+                <div class="rasid-field"><span class="rasid-label">मोबाईल</span><span
+                        class="rasid-value printMobileL"></span></div>
+
+                <div class="rasid-full-field"><span class="rasid-label">पता</span><span
+                        class="rasid-value printAddressL"></span></div>
+                <div class="rasid-full-field"><span class="rasid-label">आप द्वारा डिपोजिट अक्षरे रुपये</span><span
+                        class="rasid-value printAmountWordsL" style="font-weight: 700;"></span><span
+                        class="rasid-label">प्राप्त हुये।</span></div>
+            </div>
+            <div
+                style="display: flex; align-items: flex-end; justify-content: space-around; margin-top: 15px; border-bottom: 2px solid #000; padding-bottom: 8px;">
+                <div style="text-align: center; font-weight: 800; font-size: 0.9rem;">
+                    (यात्री हस्ताक्षर)
+                </div>
+                <div style="text-align: center; font-weight: 800; font-size: 0.9rem;">
+                    (हस्ताक्षर प्राप्तकर्ता)
+                </div>
+            </div>
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; font-size: 0.85rem; font-weight: 800;">
+                <div style="flex: 1;">
+                    उक्त डिपोजिट राशि <span
+                        style="display: inline-block; width: 120px; border-bottom: 1px dotted #000;"></span> रूपये वापस
+                    प्राप्त हुई।
+                </div>
+                <div style="text-align: right;">(हस्ताक्षर यात्री)</div>
+            </div>
+        </div>
+
+        <!-- 2. PORTRAIT: FINAL BILL (Check-out) -->
+        <div id="rasidPortrait" class="rasid-portrait-wrapper">
+            <!-- COPY 1 -->
+            <div class="rasid-portrait">
+                <div class="rasid-header">
+                    <div style="font-size: 0.7rem;">&nbsp;<br>&nbsp;</div>
+                    <div class="rasid-header-center" style="font-size: 0.8rem;">卐 चित्रकूट मण्डन श्री आदिनाथाय नम: 卐</div>
+                    <div style="text-align: right; font-size: 0.7rem;">धर्मशाला 01472-241971<br>मो.नं. 9116397180</div>
+                </div>
+
+                <div class="rasid-title" style="margin-bottom: 5px;">
+                    <h1 class="rasid-trust-name">श्री जैन श्वेताम्बर सातबीस देवरी किला तीर्थ ट्रस्ट, चित्तौड़गढ़</h1>
+                    <p class="rasid-donor-name" style="margin: 2px 0;">श्रीमती जैकुंवर बेन अमृतलाल रामजी भाई शाह,
+                        माटुंगा-मुम्बई निवासी (कुतीयाना वाले)</p>
+                    <p class="rasid-subtitle" style="font-size: 0.75rem; margin-top: 2px;">श्री जैन श्वेताम्बर विश्रांति
+                        गृह, स्टेशन रोड़, चित्तौड़गढ़ (राज.)</p>
+                </div>
+
+                <div class="rasid-body-portrait">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <div class="rasid-field-p"><span class="rasid-label">रजिस्टर सं.</span><span
+                                class="rasid-value printReceiptNoP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">डिपोजिट सं.</span><span
+                                class="rasid-value printDepositNoP" style="color: red; font-weight: 800;"></span></div>
+                    </div>
+
+                    <div class="rasid-full-field"><span class="rasid-label">श्रीमान्</span><span
+                            class="rasid-value printGuestNameP" style="font-weight: 700;"></span></div>
+                    <div class="rasid-full-field"><span class="rasid-label">पता</span><span
+                            class="rasid-value printAddressP"></span></div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <div class="rasid-field-p"><span class="rasid-label">दिनांक</span><span
+                                class="rasid-value printDateP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">कमरा नं.</span><span
+                                class="rasid-value printRoomNoP" style="font-weight: 800;"></span></div>
+                    </div>
+
+                    <table class="rasid-table" style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #000; border-top: 1px solid #000;">
+                                <th style="text-align: left; padding: 5px 0;">नाम खाता</th>
+                                <th class="amount-col" style="text-align: right; padding: 5px 0;">रुपये रकम</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 5px 0;">1. साधारण खाता</td>
+                                <td class="amount-col printRentP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0;">2. अन्य</td>
+                                <td class="amount-col printOtherP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+
+                            <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000; background: #f9f9f9;">
+                                <td style="padding: 8px 0; font-weight: 800; text-align: right;">टोटल</td>
+                                <td class="amount-col printTotalAmountP"
+                                    style="text-align: right; font-weight: 800; font-size: 1.1rem;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="rasid-full-field" style="margin-top: 4px;">
+                        <span class="rasid-label">अक्षरे रु.</span>
+                        <span class="rasid-value printAmountWordsP" style="font-weight: 700;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CUTTING DIVIDER -->
+            <div class="print-divider"></div>
+
+            <!-- COPY 2 -->
+            <div class="rasid-portrait">
+                <div class="rasid-header">
+                    <div style="font-size: 0.7rem;">&nbsp;<br>&nbsp;</div>
+                    <div class="rasid-header-center" style="font-size: 0.8rem;">卐 चित्रकूट मण्डन श्री आदिनाथाय नम: 卐</div>
+                    <div style="text-align: right; font-size: 0.7rem;">धर्मशाला 01472-241971<br>मो.नं. 9116397180</div>
+                </div>
+
+                <div class="rasid-title" style="margin-bottom: 5px;">
+                    <h1 class="rasid-trust-name">श्री जैन श्वेताम्बर सातबीस देवरी किला तीर्थ ट्रस्ट, चित्तौड़गढ़</h1>
+                    <p class="rasid-donor-name" style="margin: 2px 0;">श्रीमती जैकुंवर बेन अमृतलाल रामजी भाई शाह,
+                        माटुंगा-मुम्बई निवासी (कुतीयाना वाले)</p>
+                    <p class="rasid-subtitle" style="font-size: 0.75rem; margin-top: 2px;">श्री जैन श्वेताम्बर विश्रांति
+                        गृह, स्टेशन रोड़, चित्तौड़गढ़ (राज.)</p>
+                </div>
+
+                <div class="rasid-body-portrait">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <div class="rasid-field-p"><span class="rasid-label">रजिस्टर सं.</span><span
+                                class="rasid-value printReceiptNoP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">डिपोजिट सं.</span><span
+                                class="rasid-value printDepositNoP" style="color: red; font-weight: 800;"></span></div>
+                    </div>
+
+                    <div class="rasid-full-field"><span class="rasid-label">श्रीमान्</span><span
+                            class="rasid-value printGuestNameP" style="font-weight: 700;"></span></div>
+                    <div class="rasid-full-field"><span class="rasid-label">पता</span><span
+                            class="rasid-value printAddressP"></span></div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <div class="rasid-field-p"><span class="rasid-label">दिनांक</span><span
+                                class="rasid-value printDateP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">कमरा नं.</span><span
+                                class="rasid-value printRoomNoP" style="font-weight: 800;"></span></div>
+                    </div>
+
+                    <table class="rasid-table" style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #000; border-top: 1px solid #000;">
+                                <th style="text-align: left; padding: 5px 0;">नाम खाता</th>
+                                <th class="amount-col" style="text-align: right; padding: 5px 0;">रुपये रकम</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 5px 0;">1. साधारण खाता</td>
+                                <td class="amount-col printRentP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0;">2. अन्य</td>
+                                <td class="amount-col printOtherP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+
+                            <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000; background: #f9f9f9;">
+                                <td style="padding: 8px 0; font-weight: 800; text-align: right;">टोटल</td>
+                                <td class="amount-col printTotalAmountP"
+                                    style="text-align: right; font-weight: 800; font-size: 1.1rem;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="rasid-full-field" style="margin-top: 4px;">
+                        <span class="rasid-label">अक्षरे रु.</span>
+                        <span class="rasid-value printAmountWordsP" style="font-weight: 700;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYSTEM INFO MODAL -->
+    <div id="systemInfoModal" class="overlay">
+        <div class="modal-pane">
+            <!-- Static Status Badge -->
+            <div id="sysStatusBadge" class="status-badge online">
+                <span class="dot"></span>
+                <span id="sysStatusLabel">System Live</span>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <div id="sysIconBox" class="is-online" style="width: 60px; height: 60px; background: #dcfce7; color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; transition: 0.3s;">
+                    <i id="sysIcon" data-lucide="check-circle" style="width: 28px; height: 28px;"></i>
+                </div>
+                <h2 id="sysTitle" style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 5px;">System Running Smoothly</h2>
+                <p id="sysSubtitle" style="font-size: 0.85rem; color: #64748b; margin-bottom: 25px;">All services are operational.</p>
+                
+                <div class="dev-card-vip">
+                    <p style="font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px;">A Product Of</p>
+                    <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 15px;">Kush Sharma & Lav Sharma</h3>
+                    
+                    <div class="contact-row-premium">
+                        <div style="background: #f1f5f9; color: #475569; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i data-lucide="phone" style="width: 16px; height: 16px;"></i></div>
+                        <span style="font-size: 0.85rem; color: #334155; font-weight: 700;">+91 8233816674</span>
+                    </div>
+                    <div class="contact-row-premium">
+                        <div style="background: #f1f5f9; color: #475569; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></div>
+                        <span style="font-size: 0.85rem; color: #334155; font-weight: 700;">kushsharma.cor@gmail.com</span>
+                    </div>
+                    
+                    <p style="font-size: 0.65rem; color: #94a3b8; border-top: 1px dashed #e2e8f0; padding-top: 18px; text-align: center; font-weight: 700; margin-top: 10px; letter-spacing: 0.3px; text-transform: uppercase; white-space: nowrap;">
+                        🛡️ Secure Enterprise Environment • © 2026 v2.0
+                    </p>
+                </div>
+            </div>
+            
+            <button onclick="document.getElementById('systemInfoModal').style.display='none'" style="width: 100%; padding: 14px; border-radius: 12px; background: #0f172a; color: white; border: none; font-weight: 800; font-size: 0.9rem; cursor: pointer;">Close Window</button>
+        </div>
+    </div>
+
+    <script src="script.js?v=admin_v26"></script>
+</body>
+
+</html>

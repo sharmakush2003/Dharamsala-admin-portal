@@ -1,0 +1,197 @@
+        <!-- 1. LANDSCAPE: DEPOSIT RECEIPT (Check-in) -->
+        <div id="rasidLandscape" class="rasid-landscape">
+            <div class="rasid-header">
+                <div>&nbsp;<br>&nbsp;</div>
+                <div class="rasid-header-center">卐 चित्रकूट मण्डन श्री आदिनाथाय नम: 卐</div>
+                <div style="text-align: right;">धर्मशाला 01472-241971<br>मो.नं. 9116397180</div>
+            </div>
+            <div class="rasid-title">
+                <h1 class="rasid-trust-name">श्री जैन श्वेताम्बर सातबीस देवरी किला तीर्थ ट्रस्ट, चित्तौड़गढ़</h1>
+                <p class="rasid-donor-name">श्रीमती जैकुंवर बेन अमृतलाल रामजी भाई शाह, माटुunga-मुम्बई निवासी (कुतीयाना
+                    वाले)</p>
+                <p class="rasid-subtitle">श्री जैन श्वेताम्बर विश्रांति गृह, स्टेशन रोड़, चित्तौड़गढ़ (राज.)</p>
+            </div>
+            <div
+                style="display: flex; justify-content: center; align-items: center; gap: 20px; position: relative; margin-bottom: 20px;">
+                <div class="rasid-heading-box" style="margin: 0;">डिपोजिट रसीद</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #000; position: absolute; right: 0;">
+                    दिनांक: <span class="printDateL"></span>
+                </div>
+            </div>
+            <div class="rasid-body">
+                <div class="rasid-field"><span class="rasid-label">रसीद नं.</span><span
+                        class="rasid-value printReceiptNoL" style="color: red; font-weight: 800;"></span></div>
+                <div class="rasid-field"><span class="rasid-label">कमरा नं.</span><span class="rasid-value printRoomNoL"
+                        style="font-weight: 800;"></span></div>
+                <div class="rasid-field"><span class="rasid-label">श्रीमान्</span><span
+                        class="rasid-value printGuestNameL" style="font-weight: 700;"></span></div>
+                <div class="rasid-field"><span class="rasid-label">मोबाईल</span><span
+                        class="rasid-value printMobileL"></span></div>
+
+                <div class="rasid-full-field"><span class="rasid-label">पता</span><span
+                        class="rasid-value printAddressL"></span></div>
+                <div class="rasid-full-field"><span class="rasid-label">आप द्वारा डिपोजिट अक्षरे रुपये</span><span
+                        class="rasid-value printAmountWordsL" style="font-weight: 700;"></span><span
+                        class="rasid-label">प्राप्त हुये।</span></div>
+            </div>
+            <div
+                style="display: flex; align-items: flex-end; justify-content: space-around; margin-top: 15px; border-bottom: 2px solid #000; padding-bottom: 8px;">
+                <div style="text-align: center; font-weight: 800; font-size: 0.9rem;">
+                    (यात्री हस्ताक्षर)
+                </div>
+                <div style="text-align: center; font-weight: 800; font-size: 0.9rem;">
+                    (हस्ताक्षर प्राप्तकर्ता)
+                </div>
+            </div>
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; font-size: 0.85rem; font-weight: 800;">
+                <div style="flex: 1;">
+                    उक्त डिपोजिट राशि <span
+                        style="display: inline-block; width: 120px; border-bottom: 1px dotted #000;"></span> रूपये वापस
+                    प्राप्त हुई।
+                </div>
+                <div style="text-align: right;">(हस्ताक्षर यात्री)</div>
+            </div>
+        </div>
+
+        <!-- 2. PORTRAIT: FINAL BILL (Check-out) -->
+        <div id="rasidPortrait" class="rasid-portrait-wrapper">
+            <!-- COPY 1 -->
+            <div class="rasid-portrait">
+                <div class="rasid-header">
+                    <div style="font-size: 0.7rem;">&nbsp;<br>&nbsp;</div>
+                    <div class="rasid-header-center" style="font-size: 0.8rem;">卐 चित्रकूट मण्डन श्री आदिनाथाय नम: 卐</div>
+                    <div style="text-align: right; font-size: 0.7rem;">धर्मशाला 01472-241971<br>मो.नं. 9116397180</div>
+                </div>
+
+                <div class="rasid-title" style="margin-bottom: 5px;">
+                    <h1 class="rasid-trust-name">श्री जैन श्वेताम्बर सातबीस देवरी किला तीर्थ ट्रस्ट, चित्तौड़गढ़</h1>
+                    <p class="rasid-donor-name" style="margin: 2px 0;">श्रीमती जैकुंवर बेन अमृतलाल रामजी भाई शाह,
+                        माटुंगा-मुम्बई निवासी (कुतीयाना वाले)</p>
+                    <p class="rasid-subtitle" style="font-size: 0.75rem; margin-top: 2px;">श्री जैन श्वेताम्बर विश्रांति
+                        गृह, स्टेशन रोड़, चित्तौड़गढ़ (राज.)</p>
+                </div>
+
+                <div class="rasid-body-portrait">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <div class="rasid-field-p"><span class="rasid-label">रजिस्टर सं.</span><span
+                                class="rasid-value printReceiptNoP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">डिपोजिट सं.</span><span
+                                class="rasid-value printDepositNoP" style="color: red; font-weight: 800;"></span></div>
+                    </div>
+
+                    <div class="rasid-full-field"><span class="rasid-label">श्रीमान्</span><span
+                            class="rasid-value printGuestNameP" style="font-weight: 700;"></span></div>
+                    <div class="rasid-full-field"><span class="rasid-label">पता</span><span
+                            class="rasid-value printAddressP"></span></div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <div class="rasid-field-p"><span class="rasid-label">दिनांक</span><span
+                                class="rasid-value printDateP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">कमरा नं.</span><span
+                                class="rasid-value printRoomNoP" style="font-weight: 800;"></span></div>
+                    </div>
+
+                    <table class="rasid-table" style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #000; border-top: 1px solid #000;">
+                                <th style="text-align: left; padding: 5px 0;">नाम खाता</th>
+                                <th class="amount-col" style="text-align: right; padding: 5px 0;">रुपये रकम</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 5px 0;">1. साधारण खाता</td>
+                                <td class="amount-col printRentP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0;">2. अन्य</td>
+                                <td class="amount-col printOtherP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+
+                            <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000; background: #f9f9f9;">
+                                <td style="padding: 8px 0; font-weight: 800; text-align: right;">टोटल</td>
+                                <td class="amount-col printTotalAmountP"
+                                    style="text-align: right; font-weight: 800; font-size: 1.1rem;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="rasid-full-field" style="margin-top: 4px;">
+                        <span class="rasid-label">अक्षरे रु.</span>
+                        <span class="rasid-value printAmountWordsP" style="font-weight: 700;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CUTTING DIVIDER -->
+            <div class="print-divider"></div>
+
+            <!-- COPY 2 -->
+            <div class="rasid-portrait">
+                <div class="rasid-header">
+                    <div style="font-size: 0.7rem;">&nbsp;<br>&nbsp;</div>
+                    <div class="rasid-header-center" style="font-size: 0.8rem;">卐 चित्रकूट मण्डन श्री आदिनाथाय नम: 卐</div>
+                    <div style="text-align: right; font-size: 0.7rem;">धर्मशाला 01472-241971<br>मो.नं. 9116397180</div>
+                </div>
+
+                <div class="rasid-title" style="margin-bottom: 5px;">
+                    <h1 class="rasid-trust-name">श्री जैन श्वेताम्बर सातबीस देवरी किला तीर्थ ट्रस्ट, चित्तौड़गढ़</h1>
+                    <p class="rasid-donor-name" style="margin: 2px 0;">श्रीमती जैकुंवर बेन अमृतलाल रामजी भाई शाह,
+                        माटुंगा-मुम्बई निवासी (कुतीयाना वाले)</p>
+                    <p class="rasid-subtitle" style="font-size: 0.75rem; margin-top: 2px;">श्री जैन श्वेताम्बर विश्रांति
+                        गृह, स्टेशन रोड़, चित्तौड़गढ़ (राज.)</p>
+                </div>
+
+                <div class="rasid-body-portrait">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <div class="rasid-field-p"><span class="rasid-label">रजिस्टर सं.</span><span
+                                class="rasid-value printReceiptNoP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">डिपोजिट सं.</span><span
+                                class="rasid-value printDepositNoP" style="color: red; font-weight: 800;"></span></div>
+                    </div>
+
+                    <div class="rasid-full-field"><span class="rasid-label">श्रीमान्</span><span
+                            class="rasid-value printGuestNameP" style="font-weight: 700;"></span></div>
+                    <div class="rasid-full-field"><span class="rasid-label">पता</span><span
+                            class="rasid-value printAddressP"></span></div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <div class="rasid-field-p"><span class="rasid-label">दिनांक</span><span
+                                class="rasid-value printDateP"></span></div>
+                        <div class="rasid-field-p"><span class="rasid-label">कमरा नं.</span><span
+                                class="rasid-value printRoomNoP" style="font-weight: 800;"></span></div>
+                    </div>
+
+                    <table class="rasid-table" style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #000; border-top: 1px solid #000;">
+                                <th style="text-align: left; padding: 5px 0;">नाम खाता</th>
+                                <th class="amount-col" style="text-align: right; padding: 5px 0;">रुपये रकम</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 5px 0;">1. साधारण खाता</td>
+                                <td class="amount-col printRentP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0;">2. अन्य</td>
+                                <td class="amount-col printOtherP" style="text-align: right; font-weight: 700;"></td>
+                            </tr>
+
+                            <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000; background: #f9f9f9;">
+                                <td style="padding: 8px 0; font-weight: 800; text-align: right;">टोटल</td>
+                                <td class="amount-col printTotalAmountP"
+                                    style="text-align: right; font-weight: 800; font-size: 1.1rem;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="rasid-full-field" style="margin-top: 4px;">
+                        <span class="rasid-label">अक्षरे रु.</span>
+                        <span class="rasid-value printAmountWordsP" style="font-weight: 700;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
