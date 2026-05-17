@@ -1466,6 +1466,9 @@ document.getElementById("checkinForm").onsubmit = async (e) => {
     const rate = document.getElementById("roomRate").value || 0;
     const days = document.getElementById("expectedDays").value || 1;
     const receiptNo = "IN-" + getNextReceiptNumber();
+    
+    // Prevent duplicate receipt numbers for rapid consecutive check-ins
+    bookingData.push({ "Check In Bill No": receiptNo, "Receipt No": receiptNo });
 
     const advance = document.getElementById("roomRate")?.value || 0;
     
